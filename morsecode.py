@@ -166,7 +166,12 @@ def get_cleaned_english_sentence(raw_english_sentence):
     new_sentence = ""
     for char in raw_english_sentence:
         if char not in ".,!?":
+            if char == " " and new_sentence[-1] == " ":
+                continue
             new_sentence += char
+
+    # while "  " in new_sentence:
+    #     new_sentence.replace("  ", " ")
     return new_sentence.strip()
     # ==================================
 
@@ -248,15 +253,15 @@ def decoding_sentence(morse_sentence):
     # ===Modify codes below=============
     # 조건에 따라 변환되어야 할 결과를 result 변수에 할당 또는 필요에 따라 자유로운 수정
     alpha_string = ""
-    morse_code_dict = get_morse_code_dict()
-    for morse_character in morse_sentence.strip().split():
-        if morse_character not in morse_code_dict:
-            return False
-        alpha_string += decoding_character(morse_character)
-    return alpha_string
+    for morse_word in morse_sentence.strip().split("  "):
+        for morse_character in morse_word.strip().split():
+            alpha_string += decoding_character(morse_character)
+        alpha_string += " "
+    return alpha_string.rstrip()
     # ==================================
 
-
+# print(decoding_sentence("-.-- --- ..-  .- .-. .  ..-. "))
+# print(decoding_sentence("--. --.  --. -  -  -  - . . . ."))
 def encoding_sentence(english_sentence):
     """
     Input:
@@ -278,7 +283,6 @@ def encoding_sentence(english_sentence):
     # ===Modify codes below=============
     # 조건에 따라 변환되어야 할 결과를 result 변수에 할당 또는 필요에 따라 자유로운 수정
     cleaned_english_sentence = get_cleaned_english_sentence(english_sentence)
-    print(cleaned_english_sentence)
     morse_list = []
     for char in cleaned_english_sentence:
         if char != " ":
@@ -287,7 +291,6 @@ def encoding_sentence(english_sentence):
             morse_list.append( "" )
     return " ".join(morse_list).strip()
     # ==================================
-
 def main():
     print("Morse Code Program!!")
     # ===Modify codes below=============
